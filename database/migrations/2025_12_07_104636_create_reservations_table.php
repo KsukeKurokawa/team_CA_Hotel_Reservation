@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('check_in');
 
             // 宿泊人数(1～4名)
-            $table->unsignedTinyInteger('guests')->defult(1);
+            $table->unsignedTinyInteger('guests')->default(1);
 
             // 予約時の料金(コピー保存)
             $table->unsignedInteger('total_price');
