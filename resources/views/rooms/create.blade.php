@@ -128,24 +128,35 @@
 
         </div>
 
-        <!-- {{-- 画像URL (imageUrl) --}}
+        {{-- 💡 画像URLとプレビューのセクション --}}
         <div class="mb-4">
-            <label for="imageUrl" class="form-label">画像URL</label>
+            <label for="image_url" class="form-label">画像URL (1枚目)</label>
             <input type="url"
                 class="form-control"
-                id="imageUrl"
-                name="imageUrl"
-                value="{{ old('imageUrl') }}"
+                id="image_url"
+                name="image_url"
+                value="{{ old('image_url') }}"
                 style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
 
-            <div class="form-text text-white-50">
-                部屋の魅力が伝わる画像のURLを入力してください。
+            <div class="mt-3">
+                <p class="form-label mb-2">プレビュー:</p>
+                <img id="image_preview"
+                    src="{{ old('image_url') }}"
+                    alt="プレビュー画像"
+                    style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('image_url') ? 'block' : 'none' }};">
+                <div id="no_image_text" class="text-white-50" style="display: {{ old('image_url') ? 'none' : 'block' }};">
+                    URLを入力するとここに画像が表示されます。
+                </div>
             </div>
 
-            @error('imageUrl')
+            <div class="form-text text-white-50">
+                部屋の魅力が伝わる画像のURLを入力してください。（将来的に複数対応予定）
+            </div>
+
+            @error('image_url')
             <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
-        </div> -->
+        </div>
 
         {{-- 登録ボタン --}}
         <div class="d-grid gap-2">
@@ -157,3 +168,44 @@
 </div>
 
 @endsection
+
+{{-- 💡 プレビュー用JavaScript --}}
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageUrlInput = document.getElementById('image_url');
+        const imagePreview = document.getElementById('image_preview');
+        const noImageText = document.getElementById('no_image_text');
+
+        imageUrlInput.addEventListener('input', function() {
+            const url = this.value;
+
+            if (url && url.startsWith('http')) {
+                // 画像をロードしようと試みる
+                imagePreview.src = url;
+                imagePreview.onload = function() {
+                    imagePreview.style.display = 'block';
+                    noImageText.style.display = 'none';
+                };
+                imagePreview.onerror = function() {
+                    // 画像のロードに失敗した場合
+                    imagePreview.style.display = 'none';
+                    noImageText.style.display = 'block';
+                    noImageText.textContent = '画像URLが無効です。';
+                };
+            } else {
+                // URLが空または無効な場合
+                imagePreview.style.display = 'none';
+                imagePreview.src = '';
+                noImageText.style.display = 'block';
+                noImageText.textContent = 'URLを入力するとここに画像が表示されます。';
+            }
+        });
+
+        // ページロード時の初期チェック（old()の値がある場合）
+        if (imageUrlInput.value) {
+            imageUrlInput.dispatchEvent(new Event('input'));
+        }
+    });
+</script>
+@endpush

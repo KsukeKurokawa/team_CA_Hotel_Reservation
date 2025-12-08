@@ -40,16 +40,17 @@
     <div class="d-flex mb-4 p-0 shadow-lg mx-auto" style="background-color: #2b2b3a; max-width: 880px; border-radius: 8px;">
         {{-- 1. 画像エリア (幅を固定) --}}
         <div style="flex-shrink: 0; width: 200px; height: 200px; overflow: hidden; border-radius: 8px 0 0 8px;">
-            @if (isset($room->image_url) && $room->image_url)
-            {{-- 実際には画像URLが存在しないため、ここでは仮の画像を設定 --}}
-            <img src="{{ $room->image_url }}" alt="{{ $room->type_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {{-- ✅ 修正後: アクセサ ($room->primary_image_url) を使用 --}}
+            @if ($room->primary_image_url)
+            {{-- 💡 アクセサがroom_imagesテーブルから取得したURLを返します --}}
+            <img src="{{ $room->primary_image_url }}"
+                alt="{{ $room->type_name }}"
+                style="width: 100%; height: 100%; object-fit: cover;">
             @else
-            {{-- プレースホルダー画像 (和室と特別室の画像URLを仮に使用) --}}
-            @if ($room->type_name == '特別室')
-            <img src="https://images.unsplash.com/photo-1719710708080-9e8c98fc62c0?q=80&w=2350&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="特別室" style="width: 100%; height: 100%; object-fit: cover;">
-            @else
-            <img src="https://images.unsplash.com/photo-1719710708080-9e8c98fc62c0?q=80&w=2350&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="和室" style="width: 100%; height: 100%; object-fit: cover;">
-            @endif
+            {{-- 画像がない場合のプレースホルダー（灰色のボックスなど） --}}
+            <div class="d-flex align-items-center justify-content-center h-100" style="background-color: #383845;">
+                <i class="fas fa-image fa-3x text-white-50"></i>
+            </div>
             @endif
         </div>
 

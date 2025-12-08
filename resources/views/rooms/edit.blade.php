@@ -112,35 +112,98 @@
 
         </div>
 
-        <!-- <div class="mb-4">
-            <label for="imageUrl" class="form-label">画像URL</label>
+        <div class="mb-4">
+            <label for="image_url" class="form-label">画像URL (1枚目)</label>
             <input type="url"
                 class="form-control"
-                id="imageUrl"
-                name="imageUrl"
-                value="{{ old('imageUrl', 'https://images.unsplash.com/photo-1709742877524-68adf97ef4a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBqYXBhbmVzZSUyMHJ5b2thbiUyMHJvb218ZW58MXx8fHwxNzY0NzM0NTYwfDA&ixlib=rb-4.1.0&q=80&w=1080') }}"
+                id="image_url"
+                name="image_url"
+                {{-- 既存の画像URLを初期値として設定 --}}
+                value="{{ old('image_url', $room->primary_image_url) }}"
                 style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
 
             <div class="mt-3">
-                <p class="form-label">プレビュー:</p>
-                <img src="https://images.unsplash.com/photo-1709742877524-68adf97ef4a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBqYXBhbmVzZSUyMHJ5b2thbiUyMHJvb218ZW58MXx8fHwxNzY0NzM0NTYwfDA&ixlib=rb-4.1.0&q=80&w=1080" alt="プレビュー" style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 4px;">
-            </div> -->
+                <p class="form-label mb-2">プレビュー:</p>
+                <img id="image_preview"
+                    {{-- 💡 初期値として既存のURLを設定 --}}
+                    src="{{ old('image_url', $room->primary_image_url) }}"
+                    alt="プレビュー画像"
+                    style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('image_url', $room->primary_image_url) ? 'block' : 'none' }};">
+                <div id="no_image_text" class="text-white-50" style="display: {{ old('image_url', $room->primary_image_url) ? 'none' : 'block' }};">
+                    URLを入力するとここに画像が表示されます。
+                </div>
+            </div>
 
-            @error('imageUrl')
+            <div class="form-text text-white-50">
+                部屋の魅力が伝わる画像のURLを入力してください。（空欄にすると画像は削除されます）
+            </div>
+
+            @error('image_url')
             <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
 
-        {{-- 更新ボタン --}}
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit" class="btn btn-primary">
+        @error('imageUrl')
+        <div class="text-danger small mt-1">{{ $message }}</div>
+        @enderror
+
+        {{-- 💡 修正箇所: ボタンを横並びで中央に配置 --}}
+        <div class="d-flex justify-content-center mt-4">
+
+            {{-- 更新ボタン --}}
+            <button type="submit" class="btn btn-primary btn-lg me-3" style="width: 200px;"> {{-- me-3で右にマージン --}}
                 更新
             </button>
-            <a href="{{ route('rooms.index') }}" class="btn btn-secondary">
+
+            {{-- キャンセルボタン --}}
+            <a href="{{ route('rooms.index') }}" class="btn btn-secondary btn-lg" style="width: 200px;">
                 キャンセル
             </a>
+
         </div>
     </form>
 </div>
 
 @endsection
+
+{{-- 💡 新規登録画面と同じプレビュー用JavaScriptを追記 --}}
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageUrlInput = document.getElementById('image_url');
+        const imagePreview = document.getElementById('image_preview');
+        const noImageText = document.getElementById('no_image_text');
+
+        function updatePreview() {
+            const url = imageUrlInput.value;
+
+            if (url && url.startsWith('http')) {
+                // 画像をロードしようと試みる
+                imagePreview.src = url;
+                imagePreview.onload = function() {
+                    imagePreview.style.display = 'block';
+                    noImageText.style.display = 'none';
+                    noImageText.textContent = 'プレビュー画像'; // 成功時はテキストを元に戻す
+                };
+                imagePreview.onerror = function() {
+                    // 画像のロードに失敗した場合
+                    imagePreview.style.display = 'none';
+                    noImageText.style.display = 'block';
+                    noImageText.textContent = '画像URLが無効です。';
+                };
+            } else {
+                // URLが空または無効な場合
+                imagePreview.style.display = 'none';
+                imagePreview.src = '';
+                noImageText.style.display = 'block';
+                noImageText.textContent = 'URLを入力するとここに画像が表示されます。';
+            }
+        }
+
+        imageUrlInput.addEventListener('input', updatePreview);
+
+        // ページロード時の初期チェック
+        updatePreview();
+    });
+</script>
+@endpush
