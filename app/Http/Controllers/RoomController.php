@@ -22,15 +22,20 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:100|unique:rooms,type_name',
-            'description' => 'nullable|string',
-            'price' => 'required|integer|min:0',
-            'capacity' => 'required|integer|min:1',
-            'total_rooms' => 'required|integer|min:1',
+            // type_name => 部屋タイプ名
+            'type_name'   => 'required|string|max:100',
+            // description => 説明
+            'description' => 'required|string',
+            // 料金は in ルールで厳密に120000か200000のみを許可
+            'price'       => 'required|integer|in:120000,200000',
+            // 定員は 1 から 4 の範囲に制限
+            'capacity'    => 'required|integer|min:1|max:4',
+            // 合計部屋数は 1 から 5 の範囲に制限
+            'total_rooms' => 'required|integer|min:1|max:5',
         ]);
 
         $dataToStore = [
-            'type_name'   => $validated['name'],
+            'type_name'        => $validated['type_name'],
             'description' => $validated['description'],
             'price'       => $validated['price'],
             'capacity'    => $validated['capacity'],
@@ -38,15 +43,6 @@ class RoomController extends Controller
         ];
 
         $room = Room::create($dataToStore);
-
-        // 画像URLの処理 (今回はスキップ)
-        /*
-        // 補足: 将来的に画像を保存する場合のイメージ
-        if ($request->filled('image_url')) {
-            // room_imagesテーブルへの保存処理はここで行う
-            // 例: $room->images()->create(['url' => $request->input('image_url')]);
-        }
-        */
 
         return redirect()->route('rooms.index')->with('success', $room->type_name . ' が正常に登録されました。');
     }
@@ -74,3 +70,4 @@ class RoomController extends Controller
         //
     }
 }
+
