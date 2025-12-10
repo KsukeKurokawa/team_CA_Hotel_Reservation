@@ -100,31 +100,40 @@
         </div>
 
         {{-- 画像URLとプレビュー --}}
-        <div class="mb-4">
-            <label for="image_url" class="form-label">画像URL (1枚目)</label>
-            <input type="url"
-                class="form-control"
-                id="image_url"
-                name="image_url"
-                value="{{ old('image_url', $room->primary_image_url) }}"
-                style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
-            <div class="mt-3">
-                <p class="form-label mb-2">プレビュー:</p>
-                <img id="image_preview"
-                    src="{{ old('image_url', $room->primary_image_url) }}"
-                    alt="プレビュー画像"
-                    style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('image_url', $room->primary_image_url) ? 'block' : 'none' }};">
-                <div id="no_image_text" class="text-white-50" style="display: {{ old('image_url', $room->primary_image_url) ? 'none' : 'block' }};">
-                    URLを入力するとここに画像が表示されます。
+        <div class="mb-4 card p-3" style="background-color: #383845; border: 1px solid #4a4a58;">
+            <h5 class="mb-3 text-white">客室画像登録/編集 (URL入力)</h5>
+            <p class="form-label mb-2 text-white-75">画像URLを入力してください（最大3枚推奨）</p>
+            @for ($i = 0; $i < 3; $i++)
+                @php
+                $existingImageUrl=optional($room->images->get($i))->image_url;
+                $currentUrl = old('new_image_urls.' . $i, $existingImageUrl);
+                @endphp
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="me-2 text-white-50 flex-shrink-0" style="width: 40px;">#{{ $i + 1 }}</label>
+                    <input type="url"
+                        class="form-control new-image-url-input me-3"
+                        name="new_image_urls[]"
+                        placeholder="画像URLを入力 (順序 {{ $i + 1 }})"
+                        value="{{ $currentUrl }}"
+                        data-preview-id="new_image_preview_{{ $i }}"
+                        style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
+
+                    <img id="new_image_preview_{{ $i }}"
+                        src="{{ $currentUrl }}"
+                        alt="プレビュー"
+                        style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ $currentUrl ? 'block' : 'none' }};">
                 </div>
-            </div>
-            <div class="form-text text-white-50">
-                部屋の魅力が伝わる画像のURLを入力してください。（空欄にすると画像は削除されます）
-            </div>
-            @error('image_url')
-            <div class="text-danger small mt-1">{{ $message }}</div>
-            @enderror
+                @endfor
+
+                <div class="form-text text-white-50 mt-2">
+                    空欄にすると、その画像のURLは削除されます。表示順は上から順になります。
+                </div>
+
+                @error('new_image_urls.*')
+                <div class="text-danger small mt-1">画像URLの形式が無効です。</div>
+                @enderror
         </div>
+
 
         <div class="d-flex justify-content-center mt-4">
             {{-- 更新ボタン --}}

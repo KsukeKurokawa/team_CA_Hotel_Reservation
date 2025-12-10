@@ -28,7 +28,6 @@
                 value="{{ old('type_name') }}"
                 required
                 style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
-
             @error('type_name')
             <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
@@ -43,7 +42,6 @@
                 rows="3"
                 required
                 style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">{{ old('description') }}</textarea>
-
             @error('description')
             <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
@@ -58,13 +56,10 @@
                     name="price"
                     required
                     style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
-
                     <option value="">選択してください</option>
                     <option value="120000" {{ old('price') == 120000 ? 'selected' : '' }}>120,000円</option>
                     <option value="200000" {{ old('price') == 200000 ? 'selected' : '' }}>200,000円</option>
-
                 </select>
-
                 @error('price')
                 <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
@@ -78,16 +73,13 @@
                     name="capacity"
                     required
                     style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
-
                     <option value="">選択してください</option>
                     @for ($i = 1; $i <= 4; $i++)
                         <option value="{{ $i }}" {{ old('capacity') == $i ? 'selected' : '' }}>
                         {{ $i }} 名
                         </option>
                         @endfor
-
                 </select>
-
                 @error('capacity')
                 <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
@@ -103,62 +95,59 @@
                     name="total_rooms"
                     required
                     style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
-
                     <option value="">選択してください</option>
                     @for ($i = 1; $i <= 5; $i++)
                         <option value="{{ $i }}" {{ old('total_rooms') == $i ? 'selected' : '' }}>
                         {{ $i }} 室
                         </option>
                         @endfor
-
                 </select>
-
                 @error('total_rooms')
                 <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
             </div>
-
-            <!-- {{-- planを将来追加予定 (plan) --}} -->
-
         </div>
 
-        {{-- 画像URLとプレビュー --}}
-        <div class="mb-4">
-            <label for="image_url" class="form-label">画像URL (1枚目)</label>
-            <input type="url"
-                class="form-control"
-                id="image_url"
-                name="image_url"
-                value="{{ old('image_url') }}"
-                style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
 
-            <div class="mt-3">
-                <p class="form-label mb-2">プレビュー:</p>
-                <img id="image_preview"
-                    src="{{ old('image_url') }}"
-                    alt="プレビュー画像"
-                    style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('image_url') ? 'block' : 'none' }};">
-                <div id="no_image_text" class="text-white-50" style="display: {{ old('image_url') ? 'none' : 'block' }};">
-                    URLを入力するとここに画像が表示されます。
-                </div>
-            </div>
+        {{-- 画像URLの複数入力エリア --}}
+        <div class="mb-4 card p-3" style="background-color: #383845; border: 1px solid #4a4a58;">
+            <h5 class="mb-3 text-white">客室画像登録 (URL入力)</h5>
 
-            <div class="form-text text-white-50">
-                部屋の魅力が伝わる画像のURLを入力してください。（将来的に複数対応予定）
-            </div>
+            <p class="form-label mb-2 text-white-75">画像URLを入力してください（最大3枚推奨）</p>
 
-            @error('image_url')
-            <div class="text-danger small mt-1">{{ $message }}</div>
-            @enderror
+            @for ($i = 0; $i < 3; $i++) {{-- 💡 $iを0から開始 --}}
+                <div class="mb-3 d-flex align-items-center">
+                <label class="me-2 text-white-50 flex-shrink-0" style="width: 40px;">#{{ $i + 1 }}</label>
+                <input type="url"
+                    class="form-control new-image-url-input me-3"
+                    name="new_image_urls[]"
+                    placeholder="画像URLを入力 (順序 {{ $i + 1 }})"
+                    value="{{ old('new_image_urls.' . $i) }}" {{-- 💡 old()のインデックスも $i --}}
+                    data-preview-id="new_image_preview_{{ $i }}" {{-- 💡 IDのインデックスも $i --}}
+                    style="background-color: #383845; color: var(--admin-text-light); border: 1px solid #4a4a58;">
+                <img id="new_image_preview_{{ $i }}"
+                    src="{{ old('new_image_urls.' . $i) }}"
+                    alt="プレビュー"
+                    style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('new_image_urls.' . $i) ? 'block' : 'none' }};">
+        </div>
+        @endfor
+
+        <div class="form-text text-white-50 mt-2">
+            空欄のURLは登録されません。
         </div>
 
-        {{-- 登録ボタン --}}
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-save me-2"></i> 部屋タイプを登録
-            </button>
-        </div>
-    </form>
+        @error('new_image_urls.*')
+        <div class="text-danger small mt-1">画像URLの形式が無効です。</div>
+        @enderror
+</div>
+
+{{-- 登録ボタン --}}
+<div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary btn-lg">
+        <i class="fas fa-save me-2"></i> 部屋タイプを登録
+    </button>
+</div>
+</form>
 </div>
 
 @endsection
