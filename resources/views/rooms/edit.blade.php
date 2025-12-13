@@ -33,7 +33,7 @@
             {{-- 説明 --}}
             <div class="mb-3">
                 <label for="description" class="form-label">説明</label>
-                <textarea class="form-control" id="description" name="description" rows="6" required>{{ old('description', $room->description) }}</textarea>
+                <textarea class="form-control" id="description" name="description" rows="10" required>{{ old('description', $room->description) }}</textarea>
                 @error('description')
                 <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
