@@ -20,3 +20,12 @@ Route::get('/', function () {
 
 Route::get('/admin/reservations', [AdminReservationController::class, 'index'])
     ->name('admin.reservations.index');
+
+Route::get('/admin/reservations/{reservation}/edit', [AdminReservationController::class, 'edit'])
+    ->name('admin.reservations.edit');
+
+Route::put('/admin/reservations/{reservation}', [AdminReservationController::class, 'update'])
+    ->name('admin.reservations.update');
+
+Route::delete('/admin/reservations/{reservation}', [AdminReservationController::class, 'destroy'])
+    ->name('admin.reservations.destroy');

@@ -26,4 +26,10 @@ class AdminReservationController extends Controller
 
         return view('admin.reservations.index', compact('reservations'));
     }
+
+    public function edit(Reservation $reservation)
+    {
+        $reservation->load(['room','user']);
+        return view('admin.reservations.edit',compact('reservation'));
+    }
 }

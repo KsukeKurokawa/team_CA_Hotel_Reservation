@@ -12,8 +12,6 @@
     <main>
         @yield('content')
     </main>
-    <footer>
-        <p>&copy; {{date('Y')}} My System</p>
-    </footer>
+    <footer> </footer>
 </body>
 </html>
