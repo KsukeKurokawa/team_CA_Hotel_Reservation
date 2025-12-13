@@ -62,6 +62,7 @@ class RoomController extends Controller
             'price'       => ['required', 'integer', 'in:120000,200000'],
             'capacity'    => 'required|integer|min:1|max:4',
             'total_rooms' => 'required|integer|min:1|max:5',
+            'plan' => ['required', 'integer', 'in:0'], // 現時点では0（素泊まり）のみ必須で許可
 
             // 複数画像URLに対応したバリデーション(最大5枚)
             'new_image_urls' => 'nullable|array|max:5',
@@ -79,6 +80,7 @@ class RoomController extends Controller
                 'price'       => $validated['price'],
                 'capacity'    => $validated['capacity'],
                 'total_rooms' => $validated['total_rooms'],
+                'plan' => $validated['plan'],
             ]);
 
             // 3. room_imagesテーブルへの画像の保存 (複数対応)
@@ -120,6 +122,7 @@ class RoomController extends Controller
             'price'       => ['required', 'integer', 'in:120000,200000'],
             'capacity'    => 'required|integer|min:1|max:4',
             'total_rooms' => 'required|integer|min:1|max:5',
+            'plan' => ['required', 'integer', 'in:0'], // 現時点では0（素泊まり）のみ必須で許可
 
             // 複数画像URLに対応したバリデーション
             'new_image_urls' => 'nullable|array|max:5',
@@ -136,6 +139,7 @@ class RoomController extends Controller
                 'price'       => $validated['price'],
                 'capacity'    => $validated['capacity'],
                 'total_rooms' => $validated['total_rooms'],
+                'plan' => $validated['plan'],
             ]);
 
             // 3. 画像の更新処理 (既存を削除し、新しいURLで再登録)

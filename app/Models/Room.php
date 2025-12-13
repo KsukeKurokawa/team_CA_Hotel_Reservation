@@ -17,7 +17,7 @@ class Room extends Model
         'price',
         'capacity',
         'total_rooms',
-        // 'image_url'はroom_imagesテーブルにあるため不要
+        'plan',
     ];
 
     public function images()
