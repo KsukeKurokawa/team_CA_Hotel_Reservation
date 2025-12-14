@@ -1,12 +1,29 @@
 @extends('layouts.admin_base')
 
-@section('title', '部屋タイプ管理')
-
+{{-- ページ固有のパンくずリストとアクションボタンを定義 --}}
 @section('page_breadcrumb')
-<span class="header-page-title">部屋タイプ一覧</span>
-<a href="#" class="header-back-link">
-    <i class="fas fa-arrow-left me-2"></i> 管理者メニューに戻る
-</a>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
+
+    {{-- パンくずリスト --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="#" class="text-white-50 text-decoration-none">
+                    <i class="fas fa-home me-1"></i> 管理画面
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">
+                部屋タイプ一覧
+            </li>
+        </ol>
+    </nav>
+
+    {{-- 新規登録ボタン (PCで右寄せ) --}}
+    <a href="{{ route('rooms.create') }}" class="btn btn-primary col-12 col-md-auto shadow-sm">
+        <i class="fas fa-plus me-1"></i> 部屋タイプ登録
+    </a>
+
+</div>
 @endsection
 
 @section('content')
@@ -19,21 +36,14 @@
 </div>
 @endif
 
-<div class="d-flex justify-content-end align-items-center mb-4">
-    <a href="{{ route('rooms.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i> 部屋タイプ登録
-    </a>
-</div>
-
 {{-- グリッドレイアウト --}}
 <div class="row g-4">
     @forelse ($rooms as $room)
 
     <div class="col-md-6">
-        {{-- カード本体：背景色を変数参照に変更 --}}
         <div class="card shadow-lg h-100 overflow-hidden border-0">
 
-            {{-- 画像コンテナ (高さ固定250px) --}}
+            {{-- メイン画像コンテナ (高さ固定250px) --}}
             <div class="position-relative" style="height: 250px;">
                 @php $primaryImageUrl = $room->images->first()->image_url ?? null; @endphp
                 @if ($primaryImageUrl)
@@ -52,13 +62,13 @@
                 $planBadgeClass = 'bg-secondary';
                 if ($room->plan == 0) {
                 $planName = '素泊まりプラン';
-                $planBadgeClass = 'btn-info'; // admin_baseで定義したモダンミント色
+                $planBadgeClass = 'btn-info'; // admin_baseで定義
                 }
                 @endphp
 
                 <h3 class="fs-5 fw-bold mb-1 text-white d-flex justify-content-between align-items-center">
                     <span>{{ $room->type_name }}</span>
-                    {{-- プラン名 --}}
+                    {{-- プランバッジ --}}
                     @if ($planName)
                     <span class="badge {{ $planBadgeClass }} text-uppercase ms-2 text-dark">
                         {{ $planName }}
@@ -76,7 +86,7 @@
                     </span>
                 </div>
 
-                {{-- サムネイルエリア (48pxサイズを維持) --}}
+                {{-- サムネイルエリア (48pxサイズ) --}}
                 <div class="d-flex gap-2 mb-3">
                     @php
                     $thumbnails = $room->images->skip(1)->take(4);
@@ -88,6 +98,7 @@
                         style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
                     @endforeach
 
+                    {{-- 画像なしのプレースホルダー --}}
                     @for ($i = $thumbnails->count(); $i < $maxThumbnails; $i++)
                         <div class="rounded border border-secondary border-dashed border-opacity-25 d-flex align-items-center justify-content-center"
                         style="width: 48px; height: 48px; background-color: rgba(255,255,255,0.03);">
@@ -96,31 +107,27 @@
                 @endfor
             </div>
 
-            {{-- 説明文 --}}
+            {{-- 説明文 (高さ制限あり) --}}
             <p class="text-white-75 small mb-3" style="line-height: 1.4; height: 64px; overflow: hidden;">
                 {{ $room->description }}
             </p>
         </div>
 
-        {{-- アクションボタンエリア --}}
-        <div class="p-3 pt-0 d-flex gap-2 mt-auto">
-            {{-- ボタンのstyle属性を削除し、admin_baseの.btn-sm設定に任せる --}}
-            <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-sm btn-primary flex-grow-1">
+        {{-- アクションボタンエリア (レスポンシブ配置) --}}
+        {{-- モバイル(縦並び・全幅) -> PC(横並び・カスタム幅) --}}
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 p-3 pt-0">
+
+            {{-- 1. 詳細を見るボタン --}}
+            <a href="{{ route('rooms.show', $room->id) }}"
+                class="btn btn-primary btn-sm w-100 w-sm-auto btn-detail-w shadow-sm">
                 <i class="fas fa-eye me-1"></i> 詳細を見る
             </a>
 
-            <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-sm btn-warning text-white" style="width: 85px;">
-                <i class="fas fa-pencil-alt me-1"></i> 編集
+            {{-- 2. 編集するボタン --}}
+            <a href="{{ route('rooms.edit', $room->id) }}"
+                class="btn btn-warning btn-sm w-100 w-sm-auto btn-edit-w text-white shadow-sm">
+                <i class="fas fa-pencil-alt me-2"></i> 編集する
             </a>
-
-            <form action="{{ route('rooms.destroy', $room->id) }}" method="POST"
-                onsubmit="return confirm('{{ $room->type_name }} を削除してもよろしいですか？');" class="d-inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger" style="width: 85px;">
-                    <i class="fas fa-trash-alt me-1"></i> 削除
-                </button>
-            </form>
         </div>
     </div>
 </div>

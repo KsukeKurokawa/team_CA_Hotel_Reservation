@@ -1,23 +1,36 @@
 @extends('layouts.admin_base')
 
-@section('title', '部屋タイプ登録')
-
+{{-- ページ固有のパンくずリストを定義 --}}
 @section('page_breadcrumb')
-<span class="header-page-title">部屋タイプ登録</span>
-<a href="{{ route('rooms.index') }}" class="header-back-link">
-    <i class="fas fa-arrow-left me-2"></i> 部屋タイプ一覧に戻る
-</a>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
+
+    {{-- パンくずリスト --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="#" class="text-white-50 text-decoration-none">
+                    <i class="fas fa-home me-1"></i> 管理画面
+                </a>
+            </li>
+            {{-- ★注意: ここは登録/編集で動的に変更されますが、ここでは「登録」のまま残します --}}
+            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">
+                部屋タイプ登録
+            </li>
+        </ol>
+    </nav>
+
+</div>
 @endsection
 
 @section('content')
 <div class="mx-auto" style="max-width: 1000px;">
-    {{-- メインのフォーム開始 --}}
+    {{-- フォーム開始: 登録 (rooms.store) または 更新 (rooms.update) --}}
     <form method="POST" action="{{ route('rooms.store') }}">
         @csrf
 
-        {{-- 入力エリア（カード枠内） --}}
+        {{-- フォーム入力エリア（カード枠内） --}}
         <div class="card p-4 shadow-sm">
-            <h2 class="h4 mb-4 text-white-75 border-bottom border-secondary pb-2">新しい部屋タイプの詳細</h2>
+            <h2 class="h4 mb-4 text-white-75 border-bottom border-secondary pb-2">部屋タイプの詳細</h2>
 
             {{-- 部屋タイプ名 --}}
             <div class="mb-3">
@@ -39,7 +52,16 @@
             </div>
 
             <div class="row">
-                {{-- 料金 (price) --}}
+
+                {{-- プラン (plan) [1番目] --}}
+                <div class="col-md-6 mb-3">
+                    <label for="plan" class="form-label">プラン</label>
+                    <select name="plan" id="plan" class="form-select" required>
+                        <option value="0" selected>素泊まり</option>
+                    </select>
+                </div>
+
+                {{-- 料金 (price) [2番目] --}}
                 <div class="col-md-6 mb-3">
                     <label for="price" class="form-label">料金 (円)</label>
                     <select class="form-select" id="price" name="price" required>
@@ -51,8 +73,11 @@
                     <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
+            </div>
 
-                {{-- 定員 (capacity) --}}
+            <div class="row">
+
+                {{-- 定員 (capacity) [3番目] --}}
                 <div class="col-md-6 mb-3">
                     <label for="capacity" class="form-label">定員 (名)</label>
                     <select class="form-select" id="capacity" name="capacity" required>
@@ -65,11 +90,8 @@
                     <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
 
-            <div class="row">
-
-                {{-- 部屋数 (total_rooms) --}}
+                {{-- 部屋数 (total_rooms) [4番目] --}}
                 <div class="col-md-6 mb-3">
                     <label for="total_rooms" class="form-label">部屋数</label>
                     <select class="form-select" id="total_rooms" name="total_rooms" required>
@@ -81,14 +103,6 @@
                     @error('total_rooms')
                     <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
-                </div>
-
-                {{-- プラン (plan) --}}
-                <div class="col-md-6 mb-3">
-                    <label for="plan" class="form-label">プラン</label>
-                    <select name="plan" id="plan" class="form-select" required>
-                        <option value="0" selected>素泊まり</option>
-                    </select>
                 </div>
             </div>
 
@@ -107,6 +121,7 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
+                    {{-- 画像プレビュー --}}
                     <img id="new_image_preview_{{ $i }}" src="{{ old('new_image_urls.' . $i) }}" alt="プレビュー"
                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #4a4a58; display: {{ old('new_image_urls.' . $i) ? 'block' : 'none' }};">
             </div>
@@ -120,21 +135,30 @@
             @enderror
         </div>
 </div>
-{{-- メインカード終了 --}}
+{{-- フォーム入力エリア終了 --}}
 
-{{-- ボタンエリア（カードの外側に配置） --}}
-<div class="d-flex justify-content-center gap-3 mt-4 mb-5">
-    <button type="submit" class="btn btn-primary btn-lg shadow" style="width: 250px;">
-        <i class="fas fa-save me-2"></i>部屋タイプを登録
+{{-- アクションボタンエリア (レスポンシブ配置) --}}
+{{-- モバイル(縦並び・全幅) -> PC(横並び・カスタム幅) --}}
+<div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4 mb-5">
+
+    {{-- 1. 更新/登録ボタン --}}
+    {{-- ※ 登録画面では form="updateForm" は不要ですが、編集画面との共通化のためこの形を維持します --}}
+    <button type="submit" form="updateForm"
+        class="btn btn-primary btn-sm w-100 w-sm-auto btn-update-w shadow-sm">
+        <i class="fas fa-check-circle me-2"></i>登録
     </button>
-    <a href="{{ route('rooms.index') }}" class="btn btn-secondary btn-lg" style="width: 150px;">
-        キャンセル
+
+    {{-- 2. キャンセルボタン --}}
+    <a href="{{ route('rooms.index') }}"
+        class="btn btn-secondary btn-sm w-100 w-sm-auto btn-cancel-w shadow-sm">
+        <i class="fas fa-undo me-2"></i> キャンセル
     </a>
+
 </div>
 </form>
 </div>
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/image_preview.js') }}"></script>
+<script src="{{ asset('js/rooms_image_preview.js') }}"></script>
 @endpush
