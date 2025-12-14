@@ -389,13 +389,13 @@
                             <ul class="dropdown-menu dropdown-menu-dark custom-mobile-dropdown-menu" id="roomDropdownMenu">
 
                                 {{-- 部屋タイプ一覧 --}}
-                                <li><a class="dropdown-item @if(Request::routeIs('rooms.index')) active @endif"
+                                <li><a class="dropdown-item @if(Request::routeIs('admin.rooms.index')) active @endif"
                                         href="{{ route('admin.rooms.index') }}">
                                         <i class="fas fa-list me-2"></i> 部屋タイプ一覧
                                     </a></li>
 
                                 {{-- 新規部屋タイプ登録 --}}
-                                <li><a class="dropdown-item @if(Request::routeIs('rooms.create')) active @endif"
+                                <li><a class="dropdown-item @if(Request::routeIs('admin.rooms.create')) active @endif"
                                         href="{{ route('admin.rooms.create') }}">
                                         <i class="fas fa-plus-square me-2"></i> 新規部屋タイプ登録
                                     </a></li>
@@ -405,7 +405,6 @@
                     </div>
 
                     {{-- 右側: ログアウトボタン --}}
-                    {{-- ★★★ 修正: ul 要素に ms-auto クラスを再適用 ★★★ --}}
                     <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                         <li class="nav-item">
                             <form method="POST" action="#">

@@ -12,10 +12,10 @@ class RoomController extends Controller
 {
     public function index()
     {
-        // 1. データベースからすべての部屋タイプを取得
-        $rooms = Room::orderBy('created_at', 'desc')->get();
+        $rooms = Room::with('images')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // 2. rooms/index.blade.php にデータを渡して表示
         return view('admin.rooms.index', [
             'rooms' => $rooms
         ]);
@@ -23,31 +23,26 @@ class RoomController extends Controller
 
 
 
-    public function create()
+    public function show(Room $room)
     {
-        return view('admin.rooms.create');
-    }
+        $room->load('images');
 
-
-    public function show(string $id)
-    {
-        // 1. 詳細表示対象の部屋タイプをIDで取得
-        $room = \App\Models\Room::findOrFail($id);
-
-        // 2. 詳細ビューにデータを渡して表示
         return view('admin.rooms.show', compact('room'));
     }
 
 
 
-    public function edit(string $id)
+    public function edit(Room $room)
     {
-        // 1. 編集対象の部屋タイプをIDで取得
-        $room = \App\Models\Room::findOrFail($id);
+        $room->load('images');
 
-        // 2. 編集ビューにデータを渡して表示
-        // ファイル名: resources/views/rooms/edit.blade.php を想定
         return view('admin.rooms.edit', compact('room'));
+    }
+
+
+    public function create()
+    {
+        return view('admin.rooms.create');
     }
 
 
@@ -88,13 +83,13 @@ class RoomController extends Controller
             $sortOrder = 1;
 
             foreach ($imageUrls as $url) {
-                RoomImage::create([
-                    'room_id' => $room->id,
+                $room->images()->create([
                     'image_url' => $url,
                     'sort_order' => $sortOrder,
                 ]);
                 $sortOrder++;
             }
+
 
             DB::commit();
 
@@ -111,10 +106,8 @@ class RoomController extends Controller
 
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Room $room)
     {
-        $room = Room::findOrFail($id);
-
         // 1. バリデーション: uniqueルールから自分自身を除外 (更新時の必須対応)
         $validated = $request->validate([
             'type_name'   => 'required|string|max:100|unique:rooms,type_name,' . $room->id, // ★ 自分自身を除外
@@ -144,22 +137,23 @@ class RoomController extends Controller
 
             // 3. 画像の更新処理 (既存を削除し、新しいURLで再登録)
 
-            // 既存の関連画像レコードを全て削除
-            $room->images()->delete();
+            // new_image_urls が送られてきた場合のみ画像を更新する
+            if ($request->filled('new_image_urls')) {
 
-            // new_image_urlsから空の値をフィルタリングし、新しい画像を登録
-            $imageUrls = array_filter($request->new_image_urls);
-            $sortOrder = 1;
+                // 既存の関連画像を削除
+                $room->images()->delete();
 
-            foreach ($imageUrls as $url) {
-                // $room->images()リレーションを使用してRoomImageを登録
-                $room->images()->create([
-                    'image_url' => $url,
-                    'sort_order' => $sortOrder,
-                ]);
-                $sortOrder++;
+                $imageUrls = array_filter($request->new_image_urls);
+                $sortOrder = 1;
+
+                foreach ($imageUrls as $url) {
+                    $room->images()->create([
+                        'image_url' => $url,
+                        'sort_order' => $sortOrder,
+                    ]);
+                    $sortOrder++;
+                }
             }
-
             DB::commit();
 
             // 4. リダイレクト
@@ -175,21 +169,27 @@ class RoomController extends Controller
 
 
 
-    public function destroy(string $id)
+    public function destroy(Room $room)
     {
-        // 1. 削除対象の部屋タイプを取得
-        $room = \App\Models\Room::findOrFail($id);
-
+        // 1. 削除対象の部屋タイプは $room に格納されている
         $typeName = $room->type_name;
 
-        // 2. 論理削除を実行
-        $room->delete();
+        DB::beginTransaction();
 
-        // 3. リダイレクト
-        // RoomController.php - destroy() メソッド内
-        return redirect()->route('admin.rooms.index')->with('success', $typeName . ' が正常に削除されました。');    }
+        try {
+            // 部屋の論理削除を実行
+            $room->delete();
 
+            DB::commit();
 
+            // 3. リダイレクト
+            return redirect()->route('admin.rooms.index')->with('success', $typeName . ' が正常に削除されました。');
+        } catch (\Exception $e) {
+            DB::rollback();
 
+            \Log::error('部屋タイプ削除エラー: ' . $e->getMessage());
+
+            return back()->withErrors(['error' => '部屋タイプの削除中にエラーが発生しました。']);
+        }
+    }
 }
-

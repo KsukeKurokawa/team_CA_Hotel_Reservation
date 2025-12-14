@@ -22,11 +22,11 @@ class Room extends Model
 
     public function images()
     {
-        return $this->hasMany(\App\Models\RoomImage::class)->orderBy('sort_order');
+        return $this->hasMany(RoomImage::class)->orderBy('sort_order');
     }
 
     public function getPrimaryImageUrlAttribute()
     {
-        return $this->images->first()->image_url ?? '';
+        return optional($this->images->first())->image_url;
     }
 }

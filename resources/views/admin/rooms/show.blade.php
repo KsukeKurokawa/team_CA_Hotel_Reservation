@@ -116,7 +116,8 @@
     </a>
 
     {{-- 2. 編集ボタン (メインアクション) --}}
-    <a href="{{ route('admin.rooms.edit', $room->id) }}"
+    {{-- ★修正: ルートモデルバインディング対応 $room を直接渡す --}}
+    <a href="{{ route('admin.rooms.edit', $room) }}"
         class="btn btn-warning btn-sm w-100 w-sm-auto btn-show-edit-w text-white shadow-sm">
         <i class="fas fa-pencil-alt me-2"></i> 編集する
     </a>

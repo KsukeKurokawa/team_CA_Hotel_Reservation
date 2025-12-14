@@ -45,9 +45,9 @@
 
             {{-- メイン画像コンテナ (高さ固定250px) --}}
             <div class="position-relative" style="height: 250px;">
-                @php $primaryImageUrl = $room->images->first()->image_url ?? null; @endphp
-                @if ($primaryImageUrl)
-                <img src="{{ $primaryImageUrl }}" alt="{{ $room->type_name }}" class="w-100 h-100" style="object-fit: cover;">
+                {{-- アクセサ $room->primary_image_url を直接使用 --}}
+                @if ($room->primary_image_url)
+                <img src="{{ $room->primary_image_url }}" alt="{{ $room->type_name }}" class="w-100 h-100" style="object-fit: cover;">
                 @else
                 <div class="d-flex align-items-center justify-content-center h-100 bg-dark bg-opacity-25">
                     <i class="fas fa-image fa-4x text-white-50"></i>
@@ -118,13 +118,13 @@
         <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 p-3 pt-0">
 
             {{-- 1. 詳細を見るボタン --}}
-            <a href="{{ route('admin.rooms.show', $room->id) }}"
+            <a href="{{ route('admin.rooms.show', $room) }}"
                 class="btn btn-primary btn-sm w-100 w-sm-auto btn-detail-w shadow-sm">
                 <i class="fas fa-eye me-1"></i> 詳細を見る
             </a>
 
             {{-- 2. 編集するボタン --}}
-            <a href="{{ route('admin.rooms.edit', $room->id) }}"
+            <a href="{{ route('admin.rooms.edit', $room) }}"
                 class="btn btn-warning btn-sm w-100 w-sm-auto btn-edit-w text-white shadow-sm">
                 <i class="fas fa-pencil-alt me-2"></i> 編集する
             </a>

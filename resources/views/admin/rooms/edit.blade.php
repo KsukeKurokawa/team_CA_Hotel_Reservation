@@ -23,8 +23,10 @@
 
 @section('content')
 <div class="mx-auto" style="max-width: 1000px;">
-    {{-- フォーム開始: 更新 (rooms.update) --}}
-    <form method="POST" action="{{ route('admin.rooms.update', $room->id) }}">
+
+    {{-- メインフォーム開始: 更新 (rooms.update) --}}
+    {{-- ★修正: id="updateForm" を付与し、ボタンから参照できるように分離 --}}
+    <form id="updateForm" method="POST" action="{{ route('admin.rooms.update', $room) }}">
         @csrf
         @method('PUT')
 
@@ -118,7 +120,9 @@
 
                 @for ($i = 0; $i < 5; $i++)
                     @php
+                    // 既存の画像URLを取得 (インデックスが存在しない場合はnull)
                     $existingImageUrl=optional($roomImages->get($i))->image_url;
+                    // バリデーションエラー時のold値を優先、なければ既存DB値を使用
                     $currentUrl = old('new_image_urls.' . $i, $existingImageUrl);
                     @endphp
 
@@ -140,50 +144,53 @@
                     <div class="form-text text-white-50">
                         <i class="fas fa-info-circle me-1"></i> 空欄にすると画像は削除されます。1枚目がメイン画像になります。
                     </div>
+
+                    {{-- エラー表示エリア --}}
                     @error('new_image_urls.*')
-                    <div class="text-danger small mt-2">画像URLの形式が正しくありません。</div>
+                    <div class="text-danger small mt-2">
+                        <i class="fas fa-exclamation-triangle me-1"></i> 画像URLの形式が正しくありません。
+                        @foreach ($errors->get('new_image_urls.*') as $messages)
+                        @foreach ($messages as $message)
+                        <br>{{ $message }}
+                        @endforeach
+                        @endforeach
+                    </div>
                     @enderror
             </div>
         </div>
-        {{-- フォーム入力エリア終了 --}}
+    </form>
+    {{-- メインフォーム終了（ボタンは外側に配置） --}}
 
-        {{-- アクションボタンエリア (レスポンシブ配置) --}}
-        {{-- モバイル(縦並び・全幅) -> PC(横並び・カスタム幅) --}}
-        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4 mb-5">
 
-            {{-- 1. 更新フォーム (メインアクション) --}}
-            {{-- formタグのclassから w-100 w-sm-auto を削除 --}}
-            <form method="POST" action="{{ route('admin.rooms.update', $room->id) }}">
-                @csrf
-                @method('PUT')
-                {{-- ボタンには w-100 を維持 --}}
-                <button type="submit"
-                    class="btn btn-primary btn-sm w-100 btn-update-w shadow-sm">
-                    <i class="fas fa-check-circle me-2"></i>更新
-                </button>
-            </form>
+    {{-- アクションボタンエリア (レスポンシブ配置) --}}
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4 mb-5">
 
-            {{-- 2. 削除フォーム --}}
-            {{-- formタグのclassから w-100 w-sm-auto を削除 --}}
-            <form action="{{ route('admin.rooms.destroy', $room->id) }}" method="POST"
-                onsubmit="return confirm('{{ $room->type_name }} を削除してもよろしいですか？\n（この操作は元に戻せません）');">
-                @csrf
-                @method('DELETE')
-                {{-- ボタンには w-100 を維持 --}}
-                <button type="submit"
-                    class="btn btn-danger btn-sm w-100 btn-delete-w shadow-sm">
-                    <i class="fas fa-trash-alt me-1"></i>削除
-                </button>
-            </form>
+        {{-- 1. 更新ボタン (メインアクション) --}}
+        {{-- ★修正: form属性でメインフォーム(id="updateForm")を指定して送信 --}}
+        <button type="submit" form="updateForm"
+            class="btn btn-primary btn-sm w-100 btn-update-w shadow-sm">
+            <i class="fas fa-check-circle me-2"></i>更新
+        </button>
 
-            {{-- 3. キャンセルボタン --}}
-            {{-- aタグのclassから w-sm-auto を削除 --}}
-            <a href="{{ route('admin.rooms.index') }}"
-                class="btn btn-secondary btn-sm w-100 btn-cancel-w shadow-sm">
-                <i class="fas fa-undo me-2"></i>キャンセル
-            </a>
+        {{-- 2. 削除フォーム (独立) --}}
+        {{-- ★修正: フォームの入れ子を避け、独立したフォームとして定義 --}}
+        <form action="{{ route('admin.rooms.destroy', $room) }}" method="POST"
+            onsubmit="return confirm('{{ $room->type_name }} を削除してもよろしいですか？\n（この操作は元に戻せません）');">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                class="btn btn-danger btn-sm w-100 btn-delete-w shadow-sm">
+                <i class="fas fa-trash-alt me-1"></i>削除
+            </button>
+        </form>
 
-        </div>
+        {{-- 3. キャンセルボタン --}}
+        <a href="{{ route('admin.rooms.index') }}"
+            class="btn btn-secondary btn-sm w-100 btn-cancel-w shadow-sm">
+            <i class="fas fa-undo me-2"></i>キャンセル
+        </a>
+
+    </div>
 </div>
 @endsection
 
