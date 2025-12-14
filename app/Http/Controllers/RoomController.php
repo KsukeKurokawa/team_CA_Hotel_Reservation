@@ -16,7 +16,7 @@ class RoomController extends Controller
         $rooms = Room::orderBy('created_at', 'desc')->get();
 
         // 2. rooms/index.blade.php にデータを渡して表示
-        return view('rooms.index', [
+        return view('admin.rooms.index', [
             'rooms' => $rooms
         ]);
     }
@@ -25,7 +25,7 @@ class RoomController extends Controller
 
     public function create()
     {
-        return view('rooms.create');
+        return view('admin.rooms.create');
     }
 
 
@@ -35,7 +35,7 @@ class RoomController extends Controller
         $room = \App\Models\Room::findOrFail($id);
 
         // 2. 詳細ビューにデータを渡して表示
-        return view('rooms.show', compact('room'));
+        return view('admin.rooms.show', compact('room'));
     }
 
 
@@ -47,7 +47,7 @@ class RoomController extends Controller
 
         // 2. 編集ビューにデータを渡して表示
         // ファイル名: resources/views/rooms/edit.blade.php を想定
-        return view('rooms.edit', compact('room'));
+        return view('admin.rooms.edit', compact('room'));
     }
 
 
@@ -99,7 +99,7 @@ class RoomController extends Controller
             DB::commit();
 
             // 4. リダイレクト
-            return redirect()->route('rooms.index')->with('success', $room->type_name . ' が正常に登録されました。');
+            return redirect()->route('admin.rooms.index')->with('success', $room->type_name . ' が正常に登録されました。');
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -163,7 +163,7 @@ class RoomController extends Controller
             DB::commit();
 
             // 4. リダイレクト
-            return redirect()->route('rooms.index')->with('success', $room->type_name . ' が正常に更新されました。');
+            return redirect()->route('admin.rooms.index')->with('success', $room->type_name . ' が正常に更新されました。');
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -186,8 +186,8 @@ class RoomController extends Controller
         $room->delete();
 
         // 3. リダイレクト
-        return redirect()->route('rooms.index')->with('success', $typeName . ' が正常に削除されました。');
-    }
+        // RoomController.php - destroy() メソッド内
+        return redirect()->route('admin.rooms.index')->with('success', $typeName . ' が正常に削除されました。');    }
 
 
 

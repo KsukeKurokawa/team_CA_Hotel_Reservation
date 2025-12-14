@@ -25,7 +25,7 @@
 @section('content')
 <div class="mx-auto" style="max-width: 1000px;">
     {{-- フォーム開始: 登録 (rooms.store) または 更新 (rooms.update) --}}
-    <form method="POST" action="{{ route('rooms.store') }}">
+    <form method="POST" action="{{ route('admin.rooms.store') }}">
         @csrf
 
         {{-- フォーム入力エリア（カード枠内） --}}
@@ -149,7 +149,7 @@
     </button>
 
     {{-- 2. キャンセルボタン --}}
-    <a href="{{ route('rooms.index') }}"
+    <a href="{{ route('admin.rooms.index') }}"
         class="btn btn-secondary btn-sm w-100 w-sm-auto btn-cancel-w shadow-sm">
         <i class="fas fa-undo me-2"></i> キャンセル
     </a>

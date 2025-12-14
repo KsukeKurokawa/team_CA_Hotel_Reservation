@@ -19,7 +19,7 @@
     </nav>
 
     {{-- 新規登録ボタン (PCで右寄せ) --}}
-    <a href="{{ route('rooms.create') }}" class="btn btn-primary col-12 col-md-auto shadow-sm">
+    <a href="{{ route('admin.rooms.create') }}" class="btn btn-primary col-12 col-md-auto shadow-sm">
         <i class="fas fa-plus me-1"></i> 部屋タイプ登録
     </a>
 
@@ -118,13 +118,13 @@
         <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 p-3 pt-0">
 
             {{-- 1. 詳細を見るボタン --}}
-            <a href="{{ route('rooms.show', $room->id) }}"
+            <a href="{{ route('admin.rooms.show', $room->id) }}"
                 class="btn btn-primary btn-sm w-100 w-sm-auto btn-detail-w shadow-sm">
                 <i class="fas fa-eye me-1"></i> 詳細を見る
             </a>
 
             {{-- 2. 編集するボタン --}}
-            <a href="{{ route('rooms.edit', $room->id) }}"
+            <a href="{{ route('admin.rooms.edit', $room->id) }}"
                 class="btn btn-warning btn-sm w-100 w-sm-auto btn-edit-w text-white shadow-sm">
                 <i class="fas fa-pencil-alt me-2"></i> 編集する
             </a>

@@ -390,13 +390,13 @@
 
                                 {{-- 部屋タイプ一覧 --}}
                                 <li><a class="dropdown-item @if(Request::routeIs('rooms.index')) active @endif"
-                                        href="{{ route('rooms.index') }}">
+                                        href="{{ route('admin.rooms.index') }}">
                                         <i class="fas fa-list me-2"></i> 部屋タイプ一覧
                                     </a></li>
 
                                 {{-- 新規部屋タイプ登録 --}}
                                 <li><a class="dropdown-item @if(Request::routeIs('rooms.create')) active @endif"
-                                        href="{{ route('rooms.create') }}">
+                                        href="{{ route('admin.rooms.create') }}">
                                         <i class="fas fa-plus-square me-2"></i> 新規部屋タイプ登録
                                     </a></li>
                             </ul>

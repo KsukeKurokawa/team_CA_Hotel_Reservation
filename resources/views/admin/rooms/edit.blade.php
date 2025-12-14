@@ -24,7 +24,7 @@
 @section('content')
 <div class="mx-auto" style="max-width: 1000px;">
     {{-- フォーム開始: 更新 (rooms.update) --}}
-    <form method="POST" action="{{ route('rooms.update', $room->id) }}">
+    <form method="POST" action="{{ route('admin.rooms.update', $room->id) }}">
         @csrf
         @method('PUT')
 
@@ -153,7 +153,7 @@
 
             {{-- 1. 更新フォーム (メインアクション) --}}
             {{-- formタグのclassから w-100 w-sm-auto を削除 --}}
-            <form method="POST" action="{{ route('rooms.update', $room->id) }}">
+            <form method="POST" action="{{ route('admin.rooms.update', $room->id) }}">
                 @csrf
                 @method('PUT')
                 {{-- ボタンには w-100 を維持 --}}
@@ -165,7 +165,7 @@
 
             {{-- 2. 削除フォーム --}}
             {{-- formタグのclassから w-100 w-sm-auto を削除 --}}
-            <form action="{{ route('rooms.destroy', $room->id) }}" method="POST"
+            <form action="{{ route('admin.rooms.destroy', $room->id) }}" method="POST"
                 onsubmit="return confirm('{{ $room->type_name }} を削除してもよろしいですか？\n（この操作は元に戻せません）');">
                 @csrf
                 @method('DELETE')
@@ -178,7 +178,7 @@
 
             {{-- 3. キャンセルボタン --}}
             {{-- aタグのclassから w-sm-auto を削除 --}}
-            <a href="{{ route('rooms.index') }}"
+            <a href="{{ route('admin.rooms.index') }}"
                 class="btn btn-secondary btn-sm w-100 btn-cancel-w shadow-sm">
                 <i class="fas fa-undo me-2"></i>キャンセル
             </a>
