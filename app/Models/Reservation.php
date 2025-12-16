@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
- protected $fillable = [
+    use HasFactory;
+
+    protected $fillable = [
         'user_id',
         'room_id',
         'check_in',
@@ -16,8 +18,13 @@ class Reservation extends Model
         'status',
     ];
 
-    
-    use HasFactory;
+     // check_in と check_out を Carbonに変換するキャスト
+    protected $casts = [
+        'check_in' => 'date',
+        'check_out' => 'date',
+    ];
+   
+  
 
     public function user()
     {
