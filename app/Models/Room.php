@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\RoomImage;
+
 
 class Room extends Model
 {
     use HasFactory, SoftDeletes;
-
+  
     protected $fillable = [
         'type_name',
         'description',
@@ -19,6 +18,16 @@ class Room extends Model
         'total_rooms',
         'plan',
     ];
+  
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+ 
+    
+
+
 
     public function images()
     {

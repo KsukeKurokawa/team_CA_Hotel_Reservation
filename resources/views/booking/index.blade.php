@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.booking')
 
 @section('content')
 <div class="max-w-screen-2xl mx-auto p-6">

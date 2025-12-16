@@ -46,7 +46,7 @@ class BookingController extends Controller
             'room_id'       => 'required|exists:rooms,id',
             'guest_count'   => 'required|integer|min:1',
             'selected_plans'=> 'array',
-            'check_in_date' => 'required|date',
+            'check_in_date' => 'required|date|after_or_equal:today',//当日以降は選べないようにする
         ]);
 
         $room = Room::findOrFail($validated['room_id']);
@@ -68,7 +68,7 @@ class BookingController extends Controller
             'status'      => 'confirmed',
         ]);
 
-        // セッションに予約情報を渡す->完了画面で表示
+        // セッションに予約情報を渡す
 
         return redirect()->route('booking.create')->with('booking', [
             'id'            => $reservation->id,
@@ -78,6 +78,13 @@ class BookingController extends Controller
             'guests'        => $reservation->guests,
             'total_price'   => $reservation->total_price,
         ]);
+    }
+
+    // 予約完了画面の表示
+    public function complete()
+    {
+    return view('booking.complete');
+
 
     }
 
