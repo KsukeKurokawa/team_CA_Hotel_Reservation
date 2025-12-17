@@ -8,7 +8,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item">
-                <a href="#" class="text-white-50 text-decoration-none">
+                <a href="{{ route('admin.reservations.index') }}" class="text-white-50 text-decoration-none">
                     <i class="fas fa-home me-1"></i> 管理画面
                 </a>
             </li>
@@ -25,7 +25,6 @@
 <div class="mx-auto" style="max-width: 1000px;">
 
     {{-- メインフォーム開始: 更新 (rooms.update) --}}
-    {{-- ★修正: id="updateForm" を付与し、ボタンから参照できるように分離 --}}
     <form id="updateForm" method="POST" action="{{ route('admin.rooms.update', $room) }}">
         @csrf
         @method('PUT')

@@ -9,7 +9,7 @@ $pageTitle = '部屋タイプ登録';
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item">
-                <a href="#" class="text-white-50 text-decoration-none">
+                <a href="{{ route('admin.reservations.index') }}" class="text-white-50 text-decoration-none">
                     <i class="fas fa-home me-1"></i> 管理画面
                 </a>
             </li>

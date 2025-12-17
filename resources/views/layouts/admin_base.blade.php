@@ -372,7 +372,7 @@
             <div class="container-fluid">
 
                 {{-- サイトロゴ/タイトル --}}
-                <a href="##" class="navbar-brand text-white text-decoration-none h4 fw-bold mb-0 me-3">
+                <a href="{{ route('admin.reservations.index') }}" class="navbar-brand text-white text-decoration-none h4 fw-bold mb-0 me-3">
                     <i class="fas fa-hotel me-2 opacity-75"></i>予約管理システム
                 </a>
 
@@ -389,7 +389,7 @@
                         {{-- ここには 'me-auto' は不要です --}}
 
                         {{-- 1. 予約一覧管理 --}}
-                        <a href="##"
+                        <a href="{{ route('admin.reservations.index') }}"
                             class="nav-tab-item py-1 px-3 rounded-3 fw-bold mt-2 mt-lg-0">
                             <i class="fas fa-calendar-alt me-2"></i> 予約一覧
                         </a>
@@ -401,7 +401,7 @@
                                 <i class="fas fa-bed me-2"></i> 部屋タイプ管理
                             </button>
 
-                            {{-- ★★★ ul要素に custom-mobile-dropdown-menu クラスがあることを確認 ★★★ --}}
+                            {{-- ul要素に custom-mobile-dropdown-menu --}}
                             <ul class="dropdown-menu dropdown-menu-dark custom-mobile-dropdown-menu" id="roomDropdownMenu">
 
                                 {{-- 部屋タイプ一覧 --}}
@@ -423,14 +423,16 @@
                     {{-- 右側: ログアウトボタン --}}
                     <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                         <li class="nav-item">
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('admin.logout') }}">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-light btn-sm rounded-3 px-3 d-flex align-items-center justify-content-center justify-content-lg-start">
+                                <button type="submit"
+                                    class="btn btn-outline-light btn-sm rounded-3 px-3 d-flex align-items-center justify-content-center justify-content-lg-start">
                                     <i class="fas fa-sign-out-alt me-1"></i> ログアウト
                                 </button>
                             </form>
                         </li>
                     </ul>
+
                 </div>
                 {{-- /折りたたむナビゲーションコンテナ終了 --}}
         </nav>
