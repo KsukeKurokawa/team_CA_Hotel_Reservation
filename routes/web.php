@@ -30,8 +30,7 @@ use App\Http\Controllers\SimpleLoginController;
  ユーザー
  =======================================*/
 
-// --- login（担当：高木） ---
-
+// --- login ---
 // アカウント登録
 Route::get('/register', [RegisterController::class, 'show'])->name('register.form');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
@@ -56,13 +55,14 @@ Route::post('/user/logout', function () {
 })->name('user.logout');
 
 
-// --- 仮のlogin（担当：錦織） ---
+
+// --- 仮のlogin ---
 // 仮のログイン画面
 Route::get('/login-simple', [SimpleLoginController::class, 'showForm'])->name('login.simple');
 Route::post('/login-simple', [SimpleLoginController::class, 'login']);
 
 
-// --- user_booking（担当：錦織） ---
+// --- user_booking ---
 /*一旦保留するルート
 
 // 予約フォーム表示（チェックイン日を選択したときもここに戻る）
@@ -76,7 +76,9 @@ Route::post('/booking/store', [BookingController::class, 'store'])->name('bookin
 // 予約一覧表示（タブの「予約一覧」で利用）
 Route::get('/booking', [BookingController::class, 'index'])
     ->name('booking.index');
+
 // 予約フォーム＋一覧（タブ切り替え）
+// /bookingから/booking/create に修正しました。
 Route::get('/booking/create', [BookingController::class, 'create'])
     ->name('booking.create');
 
@@ -105,7 +107,7 @@ Route::post('/logout', function () {
  管理者
  =======================================*/
 
-// --- login（担当：高木） ---
+// --- login ---
 // 管理者ログイン
 Route::get('/admin/login', [AdminLoginController::class, 'show'])->name('admin.login.form');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login');
@@ -126,8 +128,7 @@ Route::post('/admin/logout', function () {
 })->name('admin.logout');
 
 
-// --- rooms（担当：矢木） ---
-
+// --- rooms ---
 Route::prefix('admin/rooms')->group(function () {
     Route::get('/', [RoomController::class, 'index'])->name('admin.rooms.index');
     Route::get('create', [RoomController::class, 'create'])->name('admin.rooms.create');
@@ -139,7 +140,7 @@ Route::prefix('admin/rooms')->group(function () {
     Route::delete('{room}', [RoomController::class, 'destroy'])->name('admin.rooms.destroy');
 });
 
-// --- reservations（担当：坂野） ---
+// --- reservations ---
 Route::get('/admin/reservations', [AdminReservationController::class, 'index'])
     ->name('admin.reservations.index');
 
