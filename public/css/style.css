@@ -4,6 +4,86 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #12121c; /* 背景を黒系に */
+    color: #e0e0e0; /* デフォルトの文字色を白系に */
+    flex-direction: column; /* タイトルを上部に表示するために縦並びに */
+    position: relative;
+}
+
+.login-title {
+    color: #e0e0e0;
+    font-size: 1.8rem;
+    position: absolute;
+    top: 40px; /* 画面上部から40pxの位置 */
+    left: 50%; 
+    transform: translateX(-50%); /* 中央揃え */
+    margin: 0; 
+    text-align: center;
+    padding-top: 0;
+}
+
+.container {
+    width: 400px;
+    background-color: #1e1e2d; /* 入力フォーム背景 */
+    color: #e0e0e0; /* フォーム内の文字は黒 */
+    padding: 30px;
+    border-radius: 8px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error-list {
+    color: red;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+
+
+
+
+
+/* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
     font-family: sans-serif;
 }
 
@@ -51,4 +131,4 @@ button:hover {
     color: red;
     margin-bottom: 20px;
     padding-left: 20px;
-}
+} */
