@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class UserLoginController extends Controller
 {
     public function show()
     {
-        return view('auth.userlogin'); // ビュー名は登録と合わせてauthフォルダに
+        return view('auth.userlogin'); // ログイン画面
     }
 
     public function login(Request $request)
@@ -21,38 +19,27 @@ class UserLoginController extends Controller
             'password' => ['required'],
         ]);
 
-        // emailでユーザーを検索
-        $user = User::where('email', $request->email)->first();
+        // Auth::attempt でログイン試行
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
 
-        // ユーザーが存在しない
-        if (!$user) {
-            return back()->withErrors([
-                'email' => 'メールアドレスまたはパスワードが正しくありません',
-            ]);
+            $user = Auth::user();
+
+            // 権限チェック
+            if ($user->role !== 'customer') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => '一般ユーザーとしての権限がありません',
+                ]);
+            }
+
+            // ログイン成功 → 予約画面へ
+            return redirect()->route('booking.create')->with('success', 'ログインしました');
         }
 
-        // パスワードの照合
-        if (!Hash::check($request->password, $user->password)) {
-            return back()->withErrors([
-                'email' => 'メールアドレスまたはパスワードが正しくありません',
-            ]);
-        }
-
-        // ユーザー権限チェック（role='customer'）
-        if ($user->role !== 'customer') {
-            return back()->withErrors([
-                'email' => '一般ユーザーとしての権限がありません',
-            ]);
-        }
-
-        // セッションに保存（パスワードは除外）
-        $user->makeHidden('password');
-        session(['user' => $user]);
-
-        // セッションIDを新しく生成
-        $request->session()->regenerate();
-        
-        // ユーザー用ダッシュボードへ
-        return redirect()->intended('/user/dashboard'); 
+        // ログイン失敗
+        return back()->withErrors([
+            'email' => 'メールアドレスまたはパスワードが正しくありません',
+        ]);
     }
 }
