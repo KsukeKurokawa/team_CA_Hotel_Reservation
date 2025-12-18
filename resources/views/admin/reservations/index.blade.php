@@ -3,6 +3,11 @@
 
 <h1>管理者用予約一覧</h1>
 
+<form action="{{route('admin.reservations.index')}}" method="GET">
+    <input type="text" name="date" placeholder="日付で検索">
+    <button type="submit">検索</button>
+</form>
+
 @foreach($reservations as $date => $dailyReservations)
 <h2>{{ $date }}</h2>
 <table border="1" cellpadding="5">

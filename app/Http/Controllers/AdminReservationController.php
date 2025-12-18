@@ -9,20 +9,22 @@ use Carbon\Carbon;
 
 class AdminReservationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $start = Carbon::now()->startOfWeek();
+        $query = Reservation::with(['user', 'room'])->orderBy('check_in');
 
-        $end = Carbon::now()->endOfWeek();
-
-        $reservations = Reservation::with(['user', 'room'])
-            ->whereBetween('check_in', [$start, $end])
-            ->orderBy('check_in')
-            ->get()
+        if ($request->filled('date')) {
+            $date = $request->input('date');
+            $query->whereDate('check_in', $date);
+        }
+        
+        $reservations = $query->get()
             ->groupBy(function ($reservation) {
                 return Carbon::parse($reservation->check_in)
                     ->format('Y年m月d日 (D)');
             });
+
+
 
         return view('admin.reservations.index', compact('reservations'));
     }
@@ -37,7 +39,7 @@ class AdminReservationController extends Controller
     {
         $validated = $request->validate([
             'check_in'    => ['required', 'date'],
-            'guests'      => ['required', 'integer', 'min:1','max:4'],
+            'guests'      => ['required', 'integer', 'min:1', 'max:4'],
             'total_price' => ['required', 'integer', 'min:0'],
             'status'      => ['required', 'in:confirmed,cancelled'],
         ]);
@@ -49,10 +51,10 @@ class AdminReservationController extends Controller
     }
 
     public function destroy(Reservation $reservation)
-{
-    $reservation->delete();
+    {
+        $reservation->delete();
 
-    return redirect()->route('admin.reservations.index')
-                     ->with('success', '予約を削除しました');
-}
+        return redirect()->route('admin.reservations.index')
+            ->with('success', '予約を削除しました');
+    }
 }

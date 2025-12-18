@@ -9,7 +9,7 @@
 
     <div>
         <label>宿泊日</label>
-        <input type="date" name="check_in" value="{{$reservation->check_in}}">
+        <input type="date" name="check_in" value="{{\Carbon\Carbon::parse($reservation->check_in)->format('Y-m-d')}}">
     </div>
     <div>
         <label>人数</label>
