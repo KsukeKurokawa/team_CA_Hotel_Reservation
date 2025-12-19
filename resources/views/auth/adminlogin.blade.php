@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>管理者ログイン</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-style.css') }}">
     <!-- Google Fonts 追加 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <!-- Font Awesome（アイコン表示） -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
 </head>
 <body class="login-page">
     <h1 class="login-title"><i class="fas fa-hotel me-2 opacity-75"></i>宿泊施設予約システム</h1>
