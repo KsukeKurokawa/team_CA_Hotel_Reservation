@@ -63,15 +63,8 @@ Route::post('/login-simple', [SimpleLoginController::class, 'login']);
 
 
 // --- user_booking ---
-/*一旦保留するルート
 
-// 予約フォーム表示（チェックイン日を選択したときもここに戻る）
-Route::get('/booking/create', [BookingController::class, 'create'])->name('booking.create');
 
-// 予約保存（フォーム送信）
-Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
-
-*/
 
 // 予約一覧表示（タブの「予約一覧」で利用）
 Route::get('/booking', [BookingController::class, 'index'])
@@ -80,6 +73,7 @@ Route::get('/booking', [BookingController::class, 'index'])
 // 予約フォーム＋一覧（タブ切り替え）
 // /bookingから/booking/create に修正しました。
 Route::get('/booking/create', [BookingController::class, 'create'])
+    ->middleware('auth')
     ->name('booking.create');
 
 // 予約保存（フォーム送信）
@@ -99,7 +93,7 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect('/login-simple'); // ログアウト後のリダイレクト先
+    return redirect('/login'); // ログアウト後のリダイレクト先
 })->name('logout');
 
 
