@@ -14,7 +14,7 @@
 
 </head>
 <body class="login-page">
-    <h1 class="login-title"><i class="fas fa-hotel me-2 opacity-75"></i>宿泊施設予約管理システム</h1>
+    <h1 class="login-title"><i class="fas fa-hotel me-2 opacity-75"></i>宿泊施設予約システム</h1>
 
     <div class="container">
         <h2>管理者ログイン</h2>
