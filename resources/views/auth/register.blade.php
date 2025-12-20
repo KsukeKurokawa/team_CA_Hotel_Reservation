@@ -1,13 +1,15 @@
-{{-- @extends('layouts.app') *共通レイアウトを使う --}}
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>アカウント作成</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user-style.css') }}">
+    <!-- Font Awesome（アイコン表示） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+    <h1 class="login-title"><i class="fas fa-hotel me-2 opacity-75"></i>一泊限定 高級宿泊施設予約</h1>
+
     <div class="container">
         <h2>アカウント作成</h2>
 

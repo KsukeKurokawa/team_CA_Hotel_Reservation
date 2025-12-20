@@ -1,22 +1,10 @@
 @extends('layouts.admin_base')
 
-{{-- ページ固有のパンくずリストを定義 --}}
+
 @section('page_breadcrumb')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
 
-    {{-- パンくずリスト --}}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ route('admin.reservations.index') }}" class="text-white-50 text-decoration-none">
-                    <i class="fas fa-home me-1"></i> 管理画面
-                </a>
-            </li>
-            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">
-                部屋タイプ編集
-            </li>
-        </ol>
-    </nav>
+    <h1 class="h4 fw-bold mb-4">部屋タイプ編集</h1>
 
 </div>
 @endsection
