@@ -56,12 +56,6 @@ Route::post('/user/logout', function () {
 
 
 
-// --- 仮のlogin ---
-// 仮のログイン画面
-Route::get('/login-simple', [SimpleLoginController::class, 'showForm'])->name('login.simple');
-Route::post('/login-simple', [SimpleLoginController::class, 'login']);
-
-
 // --- user_booking ---
 
 
@@ -111,7 +105,7 @@ Route::middleware('admin')->group(function () {
 
     // ログイン後の入口
     Route::get('/admin/dashboard', function () {
-        return redirect()->route('admin.rooms.index');
+        return redirect()->route('admin.reservations.index');
     });
 
 
