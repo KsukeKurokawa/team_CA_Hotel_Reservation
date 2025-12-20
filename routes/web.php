@@ -56,12 +56,6 @@ Route::post('/user/logout', function () {
 
 
 
-// --- 仮のlogin ---
-// 仮のログイン画面
-Route::get('/login-simple', [SimpleLoginController::class, 'showForm'])->name('login.simple');
-Route::post('/login-simple', [SimpleLoginController::class, 'login']);
-
-
 // --- user_booking ---
 
 
