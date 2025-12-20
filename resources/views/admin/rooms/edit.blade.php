@@ -97,7 +97,7 @@
 
                 {{-- 部屋数 (total_rooms) [4番目] --}}
                 <div class="col-md-6 mb-3">
-                    <label for="total_rooms" class="form-label">部屋数</label>
+                    <label for="total_rooms" class="form-label">部屋数 (残り部屋数: {{ $remainingRooms }}室)</label>
                     <select class="form-select" id="total_rooms" name="total_rooms" required>
                         <option value="">選択してください</option>
                         @for ($i = 1; $i <= 5; $i++)

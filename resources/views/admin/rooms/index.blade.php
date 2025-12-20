@@ -4,7 +4,7 @@
 @section('page_breadcrumb')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
 
-    {{-- パンくずリスト --}}
+    <!-- {{-- パンくずリスト --}}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item">
@@ -16,7 +16,9 @@
                 部屋タイプ一覧
             </li>
         </ol>
-    </nav>
+    </nav> -->
+
+    <h２>部屋タイプ一覧</h２>
 
     {{-- 新規登録ボタン (PCで右寄せ) --}}
     <a href="{{ route('admin.rooms.create') }}" class="btn btn-primary col-12 col-md-auto shadow-sm">
@@ -67,7 +69,10 @@
                 @endphp
 
                 <h3 class="fs-5 fw-bold mb-1 text-white d-flex justify-content-between align-items-center">
-                    <span>{{ $room->type_name }}</span>
+                    <span>
+                        {{ $room->type_name }}
+                        <small class="text-light ms-1">［ 全{{ $room->total_rooms }}室 ］</small>
+                    </span>
                     {{-- プランバッジ --}}
                     @if ($planName)
                     <span class="badge {{ $planBadgeClass }} text-uppercase ms-2 text-dark">
