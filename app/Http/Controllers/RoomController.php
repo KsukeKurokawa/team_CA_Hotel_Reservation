@@ -34,37 +34,54 @@ class RoomController extends Controller
 
     public function edit(Room $room)
     {
+        // 関連画像もロード
         $room->load('images');
 
-        return view('admin.rooms.edit', compact('room'));
+        // 自分以外の部屋数の合計を取得
+        $existingRoomsCount = Room::where('id', '!=', $room->id)->sum('total_rooms');
+
+        // 残り作成可能な部屋数を計算
+        $remainingRooms = 5 - $existingRoomsCount;
+
+        return view('admin.rooms.edit', compact('room', 'remainingRooms'));
     }
+
 
 
     public function create()
     {
-        return view('admin.rooms.create');
+        $existingRoomsCount = Room::sum('total_rooms');
+        $remainingRooms = 5 - $existingRoomsCount;
+
+        return view('admin.rooms.create', compact('remainingRooms'));
     }
 
 
 
     public function store(Request $request)
     {
-        // 1. バリデーション
+        // 1. バリデーション（最大値は一旦5までに）
         $validated = $request->validate([
-            // roomsテーブルのデータ
             'type_name'   => 'required|string|max:100|unique:rooms,type_name',
             'description' => 'required|string',
             'price'       => ['required', 'integer', 'in:120000,200000'],
             'capacity'    => 'required|integer|min:1|max:4',
             'total_rooms' => 'required|integer|min:1|max:5',
-            'plan' => ['required', 'integer', 'in:0'], // 現時点では0（素泊まり）のみ必須で許可
-
-            // 複数画像URLに対応したバリデーション(最大5枚)
+            'plan'        => ['required', 'integer', 'in:0'],
             'new_image_urls' => 'nullable|array|max:5',
             'new_image_urls.*' => 'nullable|url|max:2048',
         ]);
 
-        // トランザクション開始
+        // 追加制約：全タイプでの合計部屋数
+        $existingRoomsCount = Room::sum('total_rooms'); // 既存の合計
+        $requestedRooms = $validated['total_rooms'];
+
+        if ($existingRoomsCount + $requestedRooms > 5) {
+            return back()->withInput()->withErrors([
+                'total_rooms' => '全体で最大5室までしか作成できません。現在の合計: ' . $existingRoomsCount,
+            ]);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -75,13 +92,12 @@ class RoomController extends Controller
                 'price'       => $validated['price'],
                 'capacity'    => $validated['capacity'],
                 'total_rooms' => $validated['total_rooms'],
-                'plan' => $validated['plan'],
+                'plan'        => $validated['plan'],
             ]);
 
-            // 3. room_imagesテーブルへの画像の保存 (複数対応)
+            // 3. room_imagesテーブルへの保存
             $imageUrls = array_filter($request->new_image_urls);
             $sortOrder = 1;
-
             foreach ($imageUrls as $url) {
                 $room->images()->create([
                     'image_url' => $url,
@@ -90,16 +106,12 @@ class RoomController extends Controller
                 $sortOrder++;
             }
 
-
             DB::commit();
 
-            // 4. リダイレクト
             return redirect()->route('admin.rooms.index')->with('success', $room->type_name . ' が正常に登録されました。');
         } catch (\Exception $e) {
             DB::rollback();
-
             \Log::error('部屋タイプ登録エラー: ' . $e->getMessage());
-
             return back()->withInput()->withErrors(['error' => '部屋タイプの登録中にエラーが発生しました。']);
         }
     }
@@ -108,61 +120,61 @@ class RoomController extends Controller
 
     public function update(Request $request, Room $room)
     {
-        // 1. バリデーション: uniqueルールから自分自身を除外 (更新時の必須対応)
         $validated = $request->validate([
-            'type_name'   => 'required|string|max:100|unique:rooms,type_name,' . $room->id, // ★ 自分自身を除外
+            'type_name'   => 'required|string|max:100|unique:rooms,type_name,' . $room->id,
             'description' => 'required|string',
             'price'       => ['required', 'integer', 'in:120000,200000'],
             'capacity'    => 'required|integer|min:1|max:4',
             'total_rooms' => 'required|integer|min:1|max:5',
-            'plan' => ['required', 'integer', 'in:0'], // 現時点では0（素泊まり）のみ必須で許可
-
-            // 複数画像URLに対応したバリデーション
+            'plan'        => ['required', 'integer', 'in:0'],
             'new_image_urls' => 'nullable|array|max:5',
             'new_image_urls.*' => 'nullable|url|max:2048',
         ]);
 
+        // ★ 更新時用の合計チェック
+        $existingRoomsCount = Room::where('id', '!=', $room->id)->sum('total_rooms');
+        $requestedRooms = $validated['total_rooms'];
+
+        if ($existingRoomsCount + $requestedRooms > 5) {
+            return back()->withInput()->withErrors([
+                'total_rooms' => '全体で最大5室までしか作成できません。現在の合計: ' . $existingRoomsCount . '室',
+            ]);
+        }
+
         DB::beginTransaction();
 
         try {
-            // 2. roomsテーブルの更新
+            // roomsテーブルの更新
             $room->update([
                 'type_name'   => $validated['type_name'],
                 'description' => $validated['description'],
                 'price'       => $validated['price'],
                 'capacity'    => $validated['capacity'],
                 'total_rooms' => $validated['total_rooms'],
-                'plan' => $validated['plan'],
+                'plan'        => $validated['plan'],
             ]);
 
-            // 3. 画像の更新処理 (既存を削除し、新しいURLで再登録)
-
-            // new_image_urls が送られてきた場合のみ画像を更新する
+            // 画像の更新処理
             if ($request->filled('new_image_urls')) {
-
-                // 既存の関連画像を削除
                 $room->images()->delete();
 
                 $imageUrls = array_filter($request->new_image_urls);
                 $sortOrder = 1;
-
                 foreach ($imageUrls as $url) {
                     $room->images()->create([
-                        'image_url' => $url,
+                        'image_url'  => $url,
                         'sort_order' => $sortOrder,
                     ]);
                     $sortOrder++;
                 }
             }
+
             DB::commit();
 
-            // 4. リダイレクト
             return redirect()->route('admin.rooms.index')->with('success', $room->type_name . ' が正常に更新されました。');
         } catch (\Exception $e) {
             DB::rollback();
-
             \Log::error('部屋タイプ更新エラー: ' . $e->getMessage());
-
             return back()->withInput()->withErrors(['error' => '部屋タイプの更新中にエラーが発生しました。']);
         }
     }

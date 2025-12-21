@@ -1,23 +1,8 @@
 @extends('layouts.admin_base')
 
 @section('page_breadcrumb')
-@php
-$pageTitle = '部屋タイプ登録';
-@endphp
-
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ route('admin.reservations.index') }}" class="text-white-50 text-decoration-none">
-                    <i class="fas fa-home me-1"></i> 管理画面
-                </a>
-            </li>
-            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">
-                {{ $pageTitle }}
-            </li>
-        </ol>
-    </nav>
+    <h1 class="h4 fw-bold mb-4">部屋タイプ登録</h1>
 </div>
 @endsection
 
@@ -54,7 +39,7 @@ $pageTitle = '部屋タイプ登録';
             <div class="row">
                 {{-- プラン --}}
                 <div class="col-md-6 mb-3">
-                    <label for="plan" class="form-label">プラン</label>
+                    <label for="plan" class="form-label">基本プラン</label>
                     <select name="plan" id="plan" class="form-select" required>
                         <option value="0" @selected(old('plan')==0)>素泊まり</option>
                     </select>
@@ -93,7 +78,9 @@ $pageTitle = '部屋タイプ登録';
 
                 {{-- 部屋数 --}}
                 <div class="col-md-6 mb-3">
-                    <label for="total_rooms" class="form-label">部屋数</label>
+                    <label for="total_rooms" class="form-label">部屋数 (残り部屋数: {{ $remainingRooms }}室)
+
+                    </label>
                     <select class="form-select" id="total_rooms" name="total_rooms" required>
                         <option value="">選択してください</option>
                         @for ($i = 1; $i <= 5; $i++)

@@ -1,22 +1,10 @@
 @extends('layouts.admin_base')
 
-{{-- ページ固有のパンくずリストを定義 --}}
+
 @section('page_breadcrumb')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 w-100">
 
-    {{-- パンくずリスト --}}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ route('admin.reservations.index') }}" class="text-white-50 text-decoration-none">
-                    <i class="fas fa-home me-1"></i> 管理画面
-                </a>
-            </li>
-            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">
-                部屋タイプ編集
-            </li>
-        </ol>
-    </nav>
+    <h1 class="h4 fw-bold mb-4">部屋タイプ編集</h1>
 
 </div>
 @endsection
@@ -56,7 +44,7 @@
 
                 {{-- プラン (plan) [1番目] --}}
                 <div class="col-md-6 mb-3">
-                    <label for="plan" class="form-label">プラン</label>
+                    <label for="plan" class="form-label">基本プラン</label>
                     <select name="plan" id="plan" class="form-select" required>
                         {{-- old('plan')がない場合は $room->plan を使用 --}}
                         <option value="0" @selected(old('plan', $room->plan ?? 0) == 0)>素泊まり</option>
@@ -97,7 +85,7 @@
 
                 {{-- 部屋数 (total_rooms) [4番目] --}}
                 <div class="col-md-6 mb-3">
-                    <label for="total_rooms" class="form-label">部屋数</label>
+                    <label for="total_rooms" class="form-label">部屋数 (残り部屋数: {{ $remainingRooms }}室)</label>
                     <select class="form-select" id="total_rooms" name="total_rooms" required>
                         <option value="">選択してください</option>
                         @for ($i = 1; $i <= 5; $i++)
