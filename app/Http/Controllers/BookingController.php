@@ -92,13 +92,16 @@ class BookingController extends Controller
         return view('booking.index', compact('reservations'));
     }
 
+
+    //予約のキャンセル処理
     public function cancel($id)
     {
         $reservation = Reservation::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        $reservation->delete();
+        $reservation->status= 'cancelled';
+        $reservation->save();
 
         return redirect()->route('booking.create')
             ->with('success', '予約を削除しました');

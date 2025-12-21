@@ -6,12 +6,14 @@
         <!-- タブナビゲーション -->
         <ul class="nav nav-tabs mb-3 booking-left" id="bookingTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form" type="button" role="tab">
+                <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form" type="button"
+                    role="tab">
                     予約フォーム
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab">
+                <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button"
+                    role="tab">
                     予約一覧
                 </button>
             </li>
@@ -110,27 +112,27 @@
 
                                                 {{-- 料金の表示 --}}
                                                 <p class="fs-3 fw-bold mt-3">料金: ¥{{ number_format($room->price) }}</p>
-                                             
+
                                                 {{-- 空室表示+ 残り部屋数(横並び) --}}
                                                 <div class="d-flex justify-content-between align-items-center">
 
                                                     {{-- 部屋選択ラジオボタン --}}
                                                     <div class="form-check d-flex align-items-center">
-                                                    <input class="form-check-input" type="radio" name="room_id"
-                                                        value="{{ $room->id }}"
-                                                        {{ !$room->available ? 'disabled' : '' }}
-                                                        data-price="{{ $room->price }}" onchange="enableReserveBtn()"
-                                                        style="transform: scale(1.8); margin-right:0.6rem;">
-                                                    <label class="form-check-label fs-2 fw-bold mb-0">
-                                                        {{ $room->available ? '空室有り' : '満室' }}
-                                                    </label>
-                                                </div>
-                                                {{-- 残り部屋数 --}}
-                                                <span class="fs-4 fw-bold text-secondary">
-                                                    {{ $room->remaining_rooms }} / {{ $room->total_rooms }}
-                                                </span>
+                                                        <input class="form-check-input" type="radio" name="room_id"
+                                                            value="{{ $room->id }}"
+                                                            {{ !$room->available ? 'disabled' : '' }}
+                                                            data-price="{{ $room->price }}" onchange="enableReserveBtn()"
+                                                            style="transform: scale(1.8); margin-right:0.6rem;">
+                                                        <label class="form-check-label fs-2 fw-bold mb-0">
+                                                            {{ $room->available ? '空室有り' : '満室' }}
+                                                        </label>
+                                                    </div>
+                                                    {{-- 残り部屋数 --}}
+                                                    <span class="fs-4 fw-bold text-secondary">
+                                                        {{ $room->remaining_rooms }} / {{ $room->total_rooms }}
+                                                    </span>
 
-                                            </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -144,7 +146,7 @@
             <!-- 予約一覧 -->
             <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
 
- 
+
                 <div class="container">
 
                     <div class="card shadow-lg border-0 mb-5">
@@ -215,100 +217,99 @@
     </div>
 
 @endsection
-                <!-- 予約完了モーダル -->
-                @if (session('booking'))
-                    <div class="modal fade show" id="bookingCompleteModal" tabindex="-1"
-                        aria-labelledby="bookingCompleteLabel" aria-hidden="true" style="display:block;">
-                        <div class="modal-dialog ,mofsl-lg">
-                            <div class="modal-content" style="boder-radius: 15px; overflow: hidden;">
+<!-- 予約完了モーダル -->
+@if (session('booking'))
+    <div class="modal fade show" id="bookingCompleteModal" tabindex="-1" aria-labelledby="bookingCompleteLabel"
+        aria-hidden="true" style="display:block;">
+        <div class="modal-dialog ,mofsl-lg">
+            <div class="modal-content" style="boder-radius: 15px; overflow: hidden;">
 
-                                <!-- ゴールドグラデーションヘッダー -->
-                                <div class="modal-header text-white"
-                                    style="background: linear-gradient(90deg, #8b4513, #d4af37);">
-                                    <h4 class="modal-title" id="bookingCompleteLabel">
-                                        <i class="fas fa-check-circle me-2"></i>予約が完了しました！
-                                    </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="閉じる"></button>
-                                </div>
+                <!-- ゴールドグラデーションヘッダー -->
+                <div class="modal-header text-white" style="background: linear-gradient(90deg, #8b4513, #d4af37);">
+                    <h4 class="modal-title" id="bookingCompleteLabel">
+                        <i class="fas fa-check-circle me-2"></i>予約が完了しました！
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
 
-                                <!-- モーダル本文 -->
-                                <div class="modal-body" style="background-color: #fffaf0;">
+                <!-- モーダル本文 -->
+                <div class="modal-body" style="background-color: #fffaf0;">
 
-                                    <!-- 上部メッセージ -->
-                                    <div class="text-center mb-4">
-                                        <h5 class="fw-bold text-dark">ご予約ありがとうございます。</h5>
-                                        <p class="text-secondary">以下の内容で予約が確定しました。ご来館を心よりお待ちしております。</p>
-                                    </div>
-                                    <p class="mb-2"><strong class="text-dark">予約ID:</strong>
-                                        <span class="ms-2">booking-{{ session('booking.id') }}</span>
-                                    </p>
-                                    <p class="mb-2"><strong class="text-dark"><strong>部屋タイプ:</strong> 
-                                        <span class="ms-2">{{ session('booking.room_name') }}</span>
-                                    </p>
-                                    <p class="mb-2"><strong class="text-dark"><strong>チェックイン:</strong> 
-                                        <span class="ms-2">{{ session('booking.check_in') }}</span>
-                                    </p>
-                                    <p class="mb-2"><strong class="text-dark"><strong>チェックアウト:</strong> 
-                                        <span class="ms-2">{{ session('booking.check_out_date') }}</span>
-                                    </p>
-                                    <p class="mb-2"><strong class="text-dark"><strong>人数:</strong> 
-                                        <span class="ms-2">{{ session('booking.guests') }}名</p>
-                                    <p class="mb-0"><strong class="text-dark"><strong>料金:</strong> 
-                                        <span class="ms-2 fs-4 fw-bold text-danger">¥{{ number_format(session('booking.total_price')) }}</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- モーダルのフッター -->
-                                <div class="modal-footer" style="background-color: #fffaf0;">
-                                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">閉じる</button>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- 上部メッセージ -->
+                    <div class="text-center mb-4">
+                        <h5 class="fw-bold text-dark">ご予約ありがとうございます。</h5>
+                        <p class="text-secondary">以下の内容で予約が確定しました。ご来館を心よりお待ちしております。</p>
                     </div>
-                @endif
+                    <p class="mb-2"><strong class="text-dark">予約ID:</strong>
+                        <span class="ms-2">booking-{{ session('booking.id') }}</span>
+                    </p>
+                    <p class="mb-2"><strong class="text-dark"><strong>部屋タイプ:</strong>
+                            <span class="ms-2">{{ session('booking.room_name') }}</span>
+                    </p>
+                    <p class="mb-2"><strong class="text-dark"><strong>チェックイン:</strong>
+                            <span class="ms-2">{{ session('booking.check_in') }}</span>
+                    </p>
+                    <p class="mb-2"><strong class="text-dark"><strong>チェックアウト:</strong>
+                            <span class="ms-2">{{ session('booking.check_out_date') }}</span>
+                    </p>
+                    <p class="mb-2"><strong class="text-dark"><strong>人数:</strong>
+                            <span class="ms-2">{{ session('booking.guests') }}名</p>
+                    <p class="mb-0"><strong class="text-dark"><strong>料金:</strong>
+                            <span
+                                class="ms-2 fs-4 fw-bold text-danger">¥{{ number_format(session('booking.total_price')) }}</span>
+                    </p>
+                </div>
+            </div>
 
-                <!-- モーダルの自動表示用スクリプト -->
-                @if (session('booking'))
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            var bookingModal = document.getElementById('bookingCompleteModal');
-                            var modal = new bootstrap.Modal(bookingModal);
-                            modal.show();
-                        });
-                    </script>
-                @endif
+            <!-- モーダルのフッター -->
+            <div class="modal-footer" style="background-color: #fffaf0;">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+    </div>
+@endif
 
-                {{-- JavaScriptで予約ボタンを有効化＋文字色変更 --}}
-                <script>
-                    function enableReserveBtn() {
-                        const btn = document.getElementById('reserveBtn');
-                        btn.disabled = false; // ボタンを有効化
-                        btn.classList.remove('text-white'); // 白文字を削除
-                        btn.classList.add('text-black'); // 黒文字を追加
-                    }
-                </script>
+<!-- モーダルの自動表示用スクリプト -->
+@if (session('booking'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var bookingModal = document.getElementById('bookingCompleteModal');
+            var modal = new bootstrap.Modal(bookingModal);
+            modal.show();
+        });
+    </script>
+@endif
 
-                {{-- JavaScriptで合計金額を反映させる --}}
-                <script>
-                document.addEventListener("DOMContentLoaded", function(){
-                    function updateTotalPrice() {
-                        let basePrice = 0;
+{{-- JavaScriptで予約ボタンを有効化＋文字色変更 --}}
+<script>
+    function enableReserveBtn() {
+        const btn = document.getElementById('reserveBtn');
+        btn.disabled = false; // ボタンを有効化
+        btn.classList.remove('text-white'); // 白文字を削除
+        btn.classList.add('text-black'); // 黒文字を追加
+    }
+</script>
 
-                        // 選択された部屋の料金を取得
-                        const selectedRoom = document.querySelector('[name="room_id"]:checked');
-                        if (selectedRoom) {
-                            basePrice = parseInt(selectedRoom.dataset.price);
-                        }
+{{-- JavaScriptで合計金額を反映させる --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function updateTotalPrice() {
+            let basePrice = 0;
 
-                        // 合計金額を反映
-                        document.getElementById('totalPrice').textContent = '¥' + basePrice.toLocaleString();
-                    }
+            // 選択された部屋の料金を取得
+            const selectedRoom = document.querySelector('[name="room_id"]:checked');
+            if (selectedRoom) {
+                basePrice = parseInt(selectedRoom.dataset.price);
+            }
 
-                    // イベントリスナー
-                    document.querySelectorAll('[name="room_id"], [name="guest_count"]').forEach(el => {
-                        el.addEventListener('change', updateTotalPrice);
-                    });
-                });
-                </script>
+            // 合計金額を反映
+            document.getElementById('totalPrice').textContent = '¥' + basePrice.toLocaleString();
+        }
+
+        // イベントリスナー
+        document.querySelectorAll('[name="room_id"], [name="guest_count"]').forEach(el => {
+            el.addEventListener('change', updateTotalPrice);
+        });
+    });
+</script>
