@@ -39,7 +39,7 @@
             <div class="row">
                 {{-- プラン --}}
                 <div class="col-md-6 mb-3">
-                    <label for="plan" class="form-label">プラン</label>
+                    <label for="plan" class="form-label">基本プラン</label>
                     <select name="plan" id="plan" class="form-select" required>
                         <option value="0" @selected(old('plan')==0)>素泊まり</option>
                     </select>

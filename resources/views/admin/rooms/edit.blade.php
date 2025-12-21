@@ -44,7 +44,7 @@
 
                 {{-- プラン (plan) [1番目] --}}
                 <div class="col-md-6 mb-3">
-                    <label for="plan" class="form-label">プラン</label>
+                    <label for="plan" class="form-label">基本プラン</label>
                     <select name="plan" id="plan" class="form-select" required>
                         {{-- old('plan')がない場合は $room->plan を使用 --}}
                         <option value="0" @selected(old('plan', $room->plan ?? 0) == 0)>素泊まり</option>
