@@ -125,6 +125,21 @@ html {
   min-height: 600px;
 }
 
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.table th, .table td {
+  padding: 1rem;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+.table-hover tbody tr:hover {
+  background-color: #fdf5e6;
+}
+
+
 
 </style>
 
