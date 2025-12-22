@@ -3,16 +3,12 @@
 @section('title', '予約編集')
 
 @section('page_breadcrumb')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin.reservations.index') }}">管理画面</a></li>
-        <li class="breadcrumb-item active" aria-current="page">予約編集 #{{ $reservation->id }}</li>
-    </ol>
-</nav>
+
+<h1 class="h4 fw-bold mb-4">予約編集 #{{ $reservation->id }}</h1>
+
 @endsection
 
 @section('content')
-<h1 class="h4 fw-bold mb-4">予約編集 #{{ $reservation->id }}</h1>
 
 <form action="{{ route('admin.reservations.update', $reservation->id) }}" method="POST" class="card p-4 shadow-sm">
     @csrf

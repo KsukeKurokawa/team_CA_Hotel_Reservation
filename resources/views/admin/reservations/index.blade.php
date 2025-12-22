@@ -5,10 +5,8 @@
 @section('page_breadcrumb')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 w-100">
 
-    {{-- 左側：タイトル --}}
     <h1 class="h4 fw-bold m-0">管理者用予約一覧</h1>
 
-    {{-- 右側：検索フォーム --}}
     <form action="{{ route('admin.reservations.index') }}" method="GET"
         class="d-flex gap-2 mt-2 mt-md-0 ms-md-auto">
         <input type="text" name="date"
@@ -22,6 +20,10 @@
 @endsection
 
 @section('content')
+
+@if($reservations->flatten()->isEmpty())
+<p class="text-white mt-3">検索条件に一致する予約はありません。</p>
+@else
 
 @foreach($reservations as $date => $dailyReservations)
 <h2 class="h5 fw-bold mt-4">{{ $date }}</h2>
@@ -57,18 +59,55 @@
                         <a href="{{ route('admin.reservations.edit', $reservation->id) }}"
                             class="btn btn-sm btn-primary">編集</a>
 
-                        <form action="{{ route('admin.reservations.destroy', $reservation->id) }}"
-                            method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">削除</button>
-                        </form>
+
+                        <button type="button"
+                            class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal-{{ $reservation->id }}">
+                            削除
+                        </button>
                     </div>
+
+
                 </td>
+
             </tr>
             @endforeach
+            
         </tbody>
     </table>
 </div>
+
+
+@foreach($dailyReservations as $reservation)
+<div class="modal fade" id="deleteModal-{{ $reservation->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+
+            <div class="modal-header">
+                <h5 class="modal-title">削除確認</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                本当にこの予約を削除しますか？
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+
+                <form action="{{ route('admin.reservations.destroy', $reservation->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">削除する</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endforeach
+
+@endforeach
+@endif
 @endsection
