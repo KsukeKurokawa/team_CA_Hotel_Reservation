@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
-
     <style>
         /* タブ全体の基本デザイン */
         .nav-tabs .nav-link {
@@ -153,21 +152,26 @@
         }
 
         /* PC のときだけ予約フォームを左に寄せる */
-@media (min-width: 992px) {
-    .booking-left {
-        margin-left: -80px; /* 左に寄せる量は調整可能 */
-    }
+        @media (min-width: 992px) {
+            .booking-left {
+                margin-left: -80px;
+                /* 左に寄せる量は調整可能 */
+            }
 
-    .booking-right {
-        padding-left: 40px; /* 右側に余白を追加してバランス調整 */
-    }
-}
-@media (min-width: 992px) {
-    .room-card {
-        max-width: 900px;   /* 横幅を広く */
-        margin: 0 auto;     /* 中央寄せ */
-    }
-}
+            /* 右側に余白を追加してバランス調整 */
+            .booking-right {
+                padding-left: 40px;
+ 
+            }
+        }
+
+        /* 横幅を広くして中央寄せ */
+        @media (min-width: 992px) {
+            .room-card {
+                max-width: 900px;                
+                margin: 0 auto;
+            }
+        }
 
 
         html {
@@ -227,6 +231,20 @@
         @yield('content')
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    // モーダル表示時に Bootstrap が追加する padding-right をリアルタイムで消す
+    const fixModalShift = () => {
+        document.body.style.paddingRight = '0px';
+        document.documentElement.style.paddingRight = '0px';
+    };
+
+    document.addEventListener('shown.bs.modal', fixModalShift);
+    document.addEventListener('hidden.bs.modal', fixModalShift);
+</script>
+
+
 
 </body>
 

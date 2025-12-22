@@ -72,9 +72,12 @@
                                     <span id="totalPrice" class="fs-2 fw-bold text-danger">¥0</span>
                                 </div>
 
+                                
                                 {{-- 予約確定ボタン(初期は白文字+disabled) --}}
                                 <button type="submit" class="mt-6 bg-amber-600 text-white px-4 py-2 rounded"
-                                    id="reserveBtn" disabled>
+                                    id="reserveBtn" 
+                                    disabled
+                                    onclick="return confirm('この内容で予約を確定しますか？');">
                                     予約確定
                                 </button>
                             </div>
