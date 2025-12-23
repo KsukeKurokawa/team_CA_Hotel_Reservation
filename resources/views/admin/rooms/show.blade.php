@@ -112,5 +112,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/rooms_show_gallery.js') }}"></script>
+<script src="{{ asset('JS/rooms_show_gallery.js') }}"></script>
 @endpush
