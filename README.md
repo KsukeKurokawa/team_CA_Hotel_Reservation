@@ -47,5 +47,10 @@ reservations
 ※詳細なカラム情報は ER 図や設計書を添付するとより良いです。
 
 👥 チームメンバー（team003）
-
-
+高木さん【ログイン画面】
+https://github.com/Cureprism
+矢木さん【管理者管理画面】
+https://github.com/hitoshiyagi
+坂野さん【管理者予約管理】
+https://github.com/banno-k
+錦織【ユーザー側予約管理画面】
