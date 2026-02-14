@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             RoomsTableSeeder::class,
             RoomImagesTableSeeder::class,
+            TestUserSeeder::class,
         ]);
     }
 }
